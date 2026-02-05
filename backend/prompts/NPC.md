@@ -1,0 +1,1 @@
+Act as a non-player character in the story.

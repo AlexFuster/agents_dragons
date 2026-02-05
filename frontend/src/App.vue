@@ -107,17 +107,8 @@ export default {
     const messages = ref([
       {
         role: 'assistant',
-        content: `# Welcome, Adventurer!
-
-You find yourself at the entrance of a mysterious dungeon. The ancient stone archway looms before you, covered in strange runes that seem to pulse with a faint, otherworldly light.
-
-**What would you like to do?**
-
-*You can:*
-- Examine the runes more closely
-- Enter the dungeon
-- Look around the area
-- Or describe any other action you'd like to take`
+        content: `# Bienvenido a Agents & Dragons! 
+Describe tu personaje y el mundo en el que te encuentras.`
       }
     ])
     
@@ -158,15 +149,15 @@ You find yourself at the entrance of a mysterious dungeon. The ancient stone arc
       isTyping.value = true
 
       try {
-        // TODO: Replace with actual API call to orchestrator
-        const response = await fetch('/api/chat', {
+        // Call the backend API
+        const response = await fetch('http://localhost:8000/game', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
             message: userMessage,
-            history: messages.value
+            agent_name: 'Orchestrator'
           })
         })
 
@@ -183,19 +174,14 @@ You find yourself at the entrance of a mysterious dungeon. The ancient stone arc
       } catch (error) {
         console.error('Error sending message:', error)
         
-        // Fallback demo response
+        // Show error message to user
         messages.value.push({
           role: 'assistant',
-          content: `**[Demo Mode]**
+          content: `**[Error]**
 
-You ${userMessage.toLowerCase()}.
+Failed to connect to the game server. Please make sure the backend is running at http://localhost:8000
 
-The air grows colder as you proceed. In the dim light, you notice:
-- Ancient torches flickering along the walls
-- The sound of dripping water echoing from deeper within
-- A faint smell of sulfur
-
-*Roll for perception to notice more details, or tell me what you'd like to do next.*`
+Error: ${error.message}`
         })
       } finally {
         isTyping.value = false
