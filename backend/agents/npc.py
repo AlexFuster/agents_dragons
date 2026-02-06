@@ -8,4 +8,8 @@ class NPCAgent(Agent):
                 tools=[]
             )
         
+    def run(self, input: str, story_context: str, character_personality: str) -> str:
+        full_input = f"{input}\n\nStory context: {story_context}\n\nYour personality: {character_personality}"
+        return super().run(full_input)
+        
     

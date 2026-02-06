@@ -22,14 +22,18 @@ def config_logging(agent_name: str) -> logging.Logger:
     Configures a logger for the given agent name with a unique color.
     """
     logger = logging.getLogger(agent_name)
-    color = COLORS[hash(agent_name) % len(COLORS)]
     
-    colored_formatter = logging.Formatter(
-        f'{color}[%(name)s]{RESET} %(message)s'
-    )
-    handler = logging.StreamHandler()
-    handler.setFormatter(colored_formatter)
-    logger.addHandler(handler)
-    logger.setLevel(logging.INFO)
+    # Avoid adding duplicate handlers
+    if not logger.handlers:
+        color = COLORS[hash(agent_name) % len(COLORS)]
+        
+        colored_formatter = logging.Formatter(
+            f'{color}[%(name)s]{RESET} %(message)s'
+        )
+        handler = logging.StreamHandler()
+        handler.setFormatter(colored_formatter)
+        logger.addHandler(handler)
+        logger.setLevel(logging.INFO)
+        logger.propagate = False  # Prevent propagation to root logger
     
     return logger

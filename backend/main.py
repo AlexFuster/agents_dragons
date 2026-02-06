@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from agents.npc import NPCAgent
-from agents.storyteller import StorytellerAgent
 from agents.orchestrator import OrchestratorAgent
 import uvicorn
 import logging
