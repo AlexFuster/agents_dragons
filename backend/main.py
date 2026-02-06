@@ -20,7 +20,7 @@ app.add_middleware(
 )
 
 # Initialize agents
-sub_agents = [NPCAgent(), StorytellerAgent()]
+sub_agents = [NPCAgent()]
 orchestrator_agent = OrchestratorAgent(orchestrated_agents=sub_agents)
 
 
