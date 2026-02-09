@@ -7,10 +7,11 @@ import json
 root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
             
 class Agent:
-    def __init__(self, name: str, description: str, tools: list = [], threading: bool = True):
+    def __init__(self, name: str, description: str, tools: list = [], threading: bool = True, input_model = None):
         openai_client = get_openai_client()
         self.name = name
         self.description = description
+        self.input_model = input_model
         
         self.logger = config_logging(self.name)
         try:
@@ -32,9 +33,9 @@ class Agent:
         else:
             self.thread = None
         
-    async def run(self, input: str) -> str:
+    async def run(self, input: str, response_format = None) -> str:
         self.logger.info(f"Received input: {input}")
-        response = await self.agent.run(input, thread=self.thread)
+        response = await self.agent.run(input, thread=self.thread, response_format = response_format)
         self.logger.info(f"Generated response: {response.text}")
         self.logger.info(f"Usage details: {response.usage_details}")
         return response.text

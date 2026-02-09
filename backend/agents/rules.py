@@ -1,5 +1,7 @@
 import random
+from typing import List
 from common.agent import Agent
+from common.models import RulesInput, RulesOutput, RulesCharacter
 
 
 def simulate_check(difficulty: int, modifier: int) -> bool:
@@ -48,14 +50,19 @@ class RulesAgent(Agent):
     def __init__(self):
         super().__init__(
                 name="Rules",
-                description="This agent has access to the rules of the story world. It receives the intent of the characters, checks if it is possible and how difficult it is. It returns what happens with the action the character actions",
-                tools=[simulate_check, roll_dice]
+                description="""
+                    This agent has access to the rules of the story world. It receives the intent of the characters, checks if it is possible and how difficult it is. It returns what happens with the action the character actions
+                    Input: A list of characters with their intents and stats
+                    Output: A list of results for each character's intent, including whether it succeeded, and how much damage it did if it was an attack. The agent can use the tools to simulate checks and rolls to determine the outcomes based on the character's stats and the difficulty of the action.
+                """,
+                tools=[simulate_check, roll_dice],
+                input_model=RulesInput
             )
         # Force JSON response format
         self.agent.response_format = {"type": "json_object"}
         
-    def run(self, input: str, story_context: str, character_personality: str) -> str:
-        full_input = f"{input}\n\nStory context: {story_context}\n\nYour personality: {character_personality}"
-        return super().run(full_input)
+    async def run(self, characters: List[RulesCharacter], **kwargs) -> str:
+        full_input = RulesInput(characters=characters).json()
+        return await super().run(full_input, response_format=RulesOutput)
         
     
