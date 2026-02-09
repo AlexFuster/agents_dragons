@@ -46,6 +46,8 @@ async def play_game(request: GameRequest):
         selected_agent = next(agent for agent in sub_agents if agent.name == request.agent_name)
         logging.info(f"Received message for {request.agent_name}: {request.message}")
         result = await selected_agent.run(request.message)
+        
+    result = result.replace("```markdown", "").replace("```", "")  # Clean markdown code block formatting if present
     return GameResponse(response=result)
 
 
