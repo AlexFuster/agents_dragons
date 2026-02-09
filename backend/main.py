@@ -3,8 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from agents.npc import NPCAgent
 from agents.orchestrator import OrchestratorAgent
+from agents.rules import RulesAgent
 import uvicorn
 import logging
+
 
 
 app = FastAPI(title="Agents & Dragons API")
@@ -19,7 +21,7 @@ app.add_middleware(
 )
 
 # Initialize agents
-sub_agents = [NPCAgent()]
+sub_agents = [NPCAgent(), RulesAgent()]
 orchestrator_agent = OrchestratorAgent(orchestrated_agents=sub_agents)
 
 
