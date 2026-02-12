@@ -2,6 +2,7 @@ import random
 from typing import List
 from common.agent import Agent
 from common.models import RulesInput, RulesOutput, RulesCharacter
+from common.logging import config_logging
 
 
 def simulate_check(difficulty: int, modifier: int) -> bool:
@@ -17,6 +18,10 @@ def simulate_check(difficulty: int, modifier: int) -> bool:
     """
     dice_roll = random.randint(1, 20)
     total = dice_roll + modifier
+    logger = config_logging("Skill check")
+    logger.info("Called skill check tool")
+    logger.info(f"Total: {total}")
+    logger.info(f"Difficulty: {difficulty}")
     return total >= difficulty
 
 
@@ -43,6 +48,12 @@ def roll_dice(num_dice: int, dice_type: int, modifier: int = 0) -> int:
         raise ValueError(f"Unsupported dice type: D{dice_type}. Valid types: {valid_dice}")
     
     total = sum(random.randint(1, dice_type) for _ in range(num_dice))
+    logger = config_logging("Damage check")
+    logger.info(f"Called damage check tool")
+    logger.info(f"Number of dice: {num_dice}")
+    logger.info(f"Dice type: D{dice_type}")
+    logger.info(f"Modifier: {modifier}")
+    logger.info(f"Total result: {total}")
     return total + modifier
 
 
