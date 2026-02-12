@@ -150,7 +150,7 @@ Describe tu personaje y el mundo en el que te encuentras.`
 
       try {
         // Call the backend API
-        const response = await fetch('http://localhost:8000/game', {
+        const response = await fetch('http://localhost:8005/game', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

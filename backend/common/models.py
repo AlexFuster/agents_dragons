@@ -30,7 +30,7 @@ class RulesCharacter(BaseModel):
     stats: Stats
     
 class RulesInput(BaseModel):
-    characters: List[RulesCharacter]
+    character: RulesCharacter
     
 class RulesOutput(BaseModel):
     character_name: str
@@ -38,5 +38,9 @@ class RulesOutput(BaseModel):
     success: bool
     damage: int
     
+class NPCOutput(BaseModel):
+    character_name: str
+    actions: str
+    dialogue: str 
     
 RulesInputSchema = RulesInput.schema()

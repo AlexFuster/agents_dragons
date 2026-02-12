@@ -1,11 +1,13 @@
+from asyncio.log import logger
 import random
 from typing import List
 from common.agent import Agent
 from common.models import RulesInput, RulesOutput, RulesCharacter
 from common.logging import config_logging
+import json
 
 
-def simulate_check(difficulty: int, modifier: int) -> bool:
+def simulate_check(character_name: str, modifier_name: str, difficulty: int, modifier: int) -> bool:
     """
     Simulates a D20 skill check or attack check.
     
@@ -19,16 +21,21 @@ def simulate_check(difficulty: int, modifier: int) -> bool:
     dice_roll = random.randint(1, 20)
     total = dice_roll + modifier
     logger = config_logging("Skill check")
-    logger.info("Called skill check tool")
-    logger.info(f"Dice roll: {dice_roll}")
-    logger.info(f"Modifier: {modifier}")
-    logger.info(f"Total: {total}")
-    logger.info(f"Difficulty: {difficulty}")
-    logger.info(f"Success: {total >= difficulty}")
-    return total >= difficulty
+    success = total >= difficulty
+    log = json.dumps({
+        "character_name": character_name, 
+        "modifier_name": modifier_name, 
+        "dice_roll": dice_roll, 
+        "modifier": modifier, 
+        "total": total, 
+        "difficulty": difficulty, 
+        "success": success
+    }, indent=4)
+    logger.info(f"Skill check details: {log}")
+    return success
 
 
-def roll_dice(num_dice: int, dice_type: int, modifier: int = 0) -> int:
+def roll_dice(character_name:str, target:str, modifier_name: str, num_dice: int, dice_type: int, modifier: int = 0) -> int:
     """
     Rolls multiple dice of the same type and adds a flat modifier.
     
@@ -52,11 +59,19 @@ def roll_dice(num_dice: int, dice_type: int, modifier: int = 0) -> int:
     
     total = sum(random.randint(1, dice_type) for _ in range(num_dice))
     logger = config_logging("Damage check")
-    logger.info(f"Called damage check tool")
-    logger.info(f"Number of dice: {num_dice}")
-    logger.info(f"Dice type: D{dice_type}")
-    logger.info(f"Modifier: {modifier}")
-    logger.info(f"Total result: {total}")
+    log = json.dumps(
+        {
+            "character_name": character_name,
+            "target": target,
+            "modifier_name": modifier_name,
+            "num_dice": num_dice,
+            "dice_type": dice_type,
+            "modifier": modifier,
+            "total": total + modifier,
+        },
+        indent=4,
+    )
+    logger.info(f"Damage check details: {log}")
     return total + modifier
 
 
@@ -75,8 +90,8 @@ class RulesAgent(Agent):
         # Force JSON response format
         self.agent.response_format = {"type": "json_object"}
         
-    async def run(self, characters: List[RulesCharacter], **kwargs) -> str:
-        full_input = RulesInput(characters=characters).json()
+    async def run(self, character: RulesCharacter, **kwargs) -> str:
+        full_input = RulesInput(character=character).json()
         return await super().run(full_input, response_format=RulesOutput)
         
     
