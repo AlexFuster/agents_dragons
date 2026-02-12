@@ -20,8 +20,11 @@ def simulate_check(difficulty: int, modifier: int) -> bool:
     total = dice_roll + modifier
     logger = config_logging("Skill check")
     logger.info("Called skill check tool")
+    logger.info(f"Dice roll: {dice_roll}")
+    logger.info(f"Modifier: {modifier}")
     logger.info(f"Total: {total}")
     logger.info(f"Difficulty: {difficulty}")
+    logger.info(f"Success: {total >= difficulty}")
     return total >= difficulty
 
 
