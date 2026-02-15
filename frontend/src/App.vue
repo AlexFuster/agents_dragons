@@ -108,7 +108,15 @@ export default {
       {
         role: 'assistant',
         content: `# Bienvenido a Agents & Dragons! 
-Describe tu personaje y el mundo en el que te encuentras.`
+Eres Zug Zug, un bárbaro semiorco buscando labrarse un nombre en las tierras del norte. Te protege del peligro Anaconda, tu gran hacha de dos manos y una armadura que te hicieron con el cuero del último oso que cazó tu tribu. También posees una bolsa con una antorcha, un par de jabalinas y un hacha de mano, así como raciones de viaje. Eres un gran guerrero, listo para enfrentarse a cualquier cosa, y empezar tu leyenda cuanto antes.
+
+<br>
+
+Te estas adentrando en el Bosque de los Mil Vientos, un frondoso bosque donde el viento siempre azota las copas de los arboles. El alcalde de Rio Presto te encargó recuperar el collar de su hija, que cayo en las manos de los goblins de la tribu Comehiedra en su último asalto en los caminos. Has sido informado que los goblins se esconden en algún claro de este bosque, donde el roce frondoso de las hojas con el viento nunca para de silbar. Listo para empezar tu leyenda, das un paso al frente
+
+<br>
+
+¿Qué haces?`
       }
     ])
     
@@ -150,7 +158,7 @@ Describe tu personaje y el mundo en el que te encuentras.`
 
       try {
         // Call the backend API
-        const response = await fetch('http://localhost:8005/game', {
+        const response = await fetch('http://localhost:8000/game', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

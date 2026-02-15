@@ -77,7 +77,7 @@ Actions that are possible but challenging, requiring skill, luck, or both.
 
 2. **Use the simulate_check tool** for the attack:
    - `difficulty`: The target's AC (10, 12, 14, or 16)
-   - `modifier`: Use **0** for now (will be character-specific later)
+   - `modifier`: The formula for the modifier is the STR stat if melee attack or DEX if ranged attack -10. Use the data on the json for getting the attribute value
 
 3. **Result**:
    - `True`: SUCCESS - The attack hits
