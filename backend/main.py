@@ -4,8 +4,10 @@ from pydantic import BaseModel
 from agents.npc import NPCAgent
 from agents.orchestrator import OrchestratorAgent
 from agents.rules import RulesAgent
+from agents.scene import SceneManager
 import uvicorn
 import logging
+from agent_framework import AIFunction    
 
 
 
@@ -22,7 +24,13 @@ app.add_middleware(
 
 # Initialize agents
 sub_agents = [NPCAgent(), RulesAgent()]
-orchestrator_agent = OrchestratorAgent(orchestrated_agents=sub_agents)
+tools = [AIFunction(func=agent.run, name=agent.name, description=agent.description, input_model=agent.input_model) for agent in sub_agents]
+
+scene_manager = SceneManager()
+scene_tools = [AIFunction(func=getattr(scene_manager, tool['name']), name=tool['name'], description=tool['description'], input_model=tool['input_model']) for tool in scene_manager.tools_exposed]
+tools.extend(scene_tools)
+
+orchestrator_agent = OrchestratorAgent(tools=tools)
 
 
 class GameRequest(BaseModel):
@@ -41,7 +49,8 @@ async def play_game(request: GameRequest):
     """
     if request.agent_name == "Orchestrator":
         logging.info(f"Received message for Orchestrator: {request.message}")
-        result = await orchestrator_agent.run(request.message)
+        scene = scene_manager.get_scene()  # Get the current scene to provide context to the orchestrator
+        result = await orchestrator_agent.run(request.message, scene)
     else:
         selected_agent = next(agent for agent in sub_agents if agent.name == request.agent_name)
         logging.info(f"Received message for {request.agent_name}: {request.message}")

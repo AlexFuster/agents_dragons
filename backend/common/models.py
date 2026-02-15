@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from typing import List, Literal
 
 
-class OldCharacter(BaseModel):
+class SceneCharacter(BaseModel):
     name: str
     type: str
     physical_description: str
@@ -10,9 +10,21 @@ class OldCharacter(BaseModel):
     current_hp: int = Field(ge=0)
     distance_to_pj: Literal["none", "close", "near", "far"]
     is_pj: bool
-    attitude: Literal["pos", "neg", "neutral"]
+    attitude_to_pj: Literal["pos", "neg", "neutral"]
     
-
+class SceneAddInput(BaseModel):
+    character: SceneCharacter
+    
+class SceneUpdateInput(BaseModel):
+    name: str
+    keys_to_update: List[str]
+    new_values: List[str | int | bool]
+    
+class SceneRemoveInput(BaseModel):
+    name: str
+    
+class Scene(BaseModel):
+    characters: List[SceneCharacter]
 
 class Stats(BaseModel):
     STR: int
